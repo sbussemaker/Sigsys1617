@@ -35,4 +35,11 @@ Answer here the posed question:
   This is needed to make an accurate transform from x[n] to x(t), since t = n/fs.
   The required height of the samplerate is dependant on the frequency of the input signal.
   An higher f needs an higher fs. 
+
+  Phi is determined on basis of the first peak. 
+  This means that when the point where the first peak is encountered, is closer to the actual
+  point where the first peak is, the accuracy goes up. This means that the samplerate and the
+  accuracy are correlated. The reason that we need a high samplerate is because of the way we 
+  determine phi, namely by use of the first peak. If we are a little bit off we are quite a bit off.
+  Therefore we need a high samplerate.
 %}
