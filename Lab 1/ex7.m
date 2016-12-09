@@ -3,6 +3,7 @@
 function [theta,r] = cart2polar(x,y)
 	theta = atan2(y, x);
 	r = sqrt(x*x + y*y);
+  % super handige functie
 end
 
 function [x,y] = polar2cart(theta, r)
