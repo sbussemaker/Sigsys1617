@@ -1,13 +1,13 @@
 % Vincent de Wit (s3038858)
 % Stefan Bussemaker (s2004674)
-function c = circorr(x,y)
-	N = length(x);
-	c = zeros(N,1);
-	for d = 1:N
-		for n = 1:N
-			k = mod(n+d, N)+1;
-			l = x(n) * y(k);
-			c(d) += l;
-		end
-	end
+function z = circorr2(x, y)
+    N = length(x);                      % each consist of N samples
+    z = zeros(1, N);                    % allocate memory for result
+    
+    for d = 1:N
+        for n = 1:N
+            k = mod(n-1+d-1, N) + 1;    % apply 'mod' operator, fix index
+            z(d) = z(d) + x(n)*y(k);    % add product
+        end
+    end
 end
