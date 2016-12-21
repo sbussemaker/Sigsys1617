@@ -7,4 +7,4 @@
 x = rand(1, 1000);
 y = rand(1, 10);
 z = pearson2(y, y)
-plot(z);
+plot(z); pause;
