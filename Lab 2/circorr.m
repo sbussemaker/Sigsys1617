@@ -1,6 +1,6 @@
 % Vincent de Wit (s3038858)
 % Stefan Bussemaker (s2004674)
-function z = circorr2(x, y)
+function z = circorr(x, y)
     N = length(x);                      % each consist of N samples
     z = zeros(1, N);                    % allocate memory for result
     
