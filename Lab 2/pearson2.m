@@ -8,7 +8,8 @@ function p = pearson2(x, y)
   end
 
   p = zeros(1, N);
-  x2 = [x(end-M+1:end) x];      % prepend x
+  
+  x2 = [x(end-M+1:end); x];      % prepend x
   
   Y2 = sqrt(sum((y - mean(y)).*(y - mean(y))));
   for d = 1:N
@@ -20,7 +21,7 @@ function p = pearson2(x, y)
     if (denom == 0)
       p(d) = 0;
     else 
-      enum  = sum(conv(x_minus_mean_x, fliplr(y) - mean(y),'valid'))
+      enum  = sum(conv(x_minus_mean_x, fliplr(y) - mean(y),'valid'));
       p(d) = enum / denom;
     end
   end
