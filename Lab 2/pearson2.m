@@ -8,11 +8,13 @@ function p = pearson2(x, y)
   end
 
   p = zeros(1, N);
-  Y2 = sqrt(power(sum(y - mean(y)),2));
+  x2 = [x x(1:M)];      % extend x
+  
+  Y2 = sqrt(sum(power(y - mean(y),2)));
   for d = 1:N
-    x_masked = x(d:mod((d+M-2), N) + 1);
+    x_masked = x2(d:d+M);
     enum  = sum(conv(x_masked, fliplr(y)));
-    X2 = sqrt(power(sum(x_masked - mean(x_masked)),2));
+    X2 = sqrt(sum(power(x_masked - mean(x_masked),2)));
     denom = X2 * Y2;
 
     if (denom == 0)

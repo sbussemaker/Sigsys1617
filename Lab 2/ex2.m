@@ -6,4 +6,5 @@
 % 2a)
 x = rand(1, 1000);
 y = rand(1, 10);
-plot(pearson2(y, y));
+z = pearson2(y, y)
+plot(z);
