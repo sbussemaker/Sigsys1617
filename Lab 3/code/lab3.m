@@ -3,7 +3,7 @@
 %
 % Lab 3: Signals and Systems
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Make a function myconv(x,y) that returns the convolution of the signals x and y
 
 k = 4;
@@ -22,7 +22,7 @@ assert(sum(abs(z1-z2) < tol)==length(z1));
 disp('conv and myconv produced same output');
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Make a (very slow) DFT by constructing a vanderMonde matrix, and multiplying the input with this
 % matrix. Compare your result with the built-in function FFT. 
 
@@ -40,7 +40,7 @@ assert(sum(abs(z1-z2) < tol)==length(z1));
 disp('ivdm and ifft produced same output');
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Repeat the previous exercise using prime numbers and roots of unity.
 
 [a1, V] = vdm2(x);
