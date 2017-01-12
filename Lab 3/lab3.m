@@ -1,21 +1,15 @@
 %% Exercise 1 - myconv
-k = 8;
+k = 3;
 N = power(2, k);
 
 % Two signals of length 2^k
-x = rand(N, 1);
-y = rand(N, 1);
-
-% Zeropadding
-x = [x; zeros(N, 1)];
-y = [y; zeros(N, 1)];
-
-assert(length(x) == 2*N);
-assert(length(y) == 2*N);
+x = rand(1, N);
+y = rand(1, N);
 
 % Convolution
-ans1 = conv(x, y)
-ans2 = myconv(x, y)
+z1 = conv(x, y);
+z2 = myconv(x, y);
 
-length(ans1)
-length(ans2)
+assert(sum(round(z1, 5) ~= round(z2, 5)) == 0);
+
+
