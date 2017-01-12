@@ -43,3 +43,9 @@ disp('ivdm and ifft produced same output');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Repeat the previous exercise using prime numbers and roots of unity.
 
+[a1, V] = vdm2(x);
+z1 = ivdm(a1, V);
+z2 = ifft(fft(x));
+
+assert(sum(abs(z1-z2) < tol)==length(z1));
+disp('fft+ifft and prime_vdm+prime_ivdm produced same output');
