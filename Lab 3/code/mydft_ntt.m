@@ -1,4 +1,4 @@
-function [result, V] = vdm2(x)
+function [result, V] = mydft_ntt(x)
   % VanderMonde matrix using primes
   N = length(x);
   V = zeros(N,N);

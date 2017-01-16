@@ -3,3 +3,6 @@
 
 # octave files
 octave-workspace
+
+# matlab files
+*.asv
