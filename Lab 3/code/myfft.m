@@ -5,6 +5,7 @@ function y = myfft(a, w)
   %         of unity
   
   N = length(a);
+  w = exp(-1j*2*pi/N);
   
   % Base case
   if N == 1
