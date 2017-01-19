@@ -3,13 +3,14 @@ function y = mydft_ntt(a)
   %         primitive nth root of unity w, where n is a power of 2
   % Output: A vector y of values of the polynomial for a at the nth roots
   %         of unity
+  
   N = length(a);
 
   [g, p] = rootsofunity(N);
   k = (p-1)/N;
   w = g.^k;
   
-  % Make Vandermonde matrix
+  % Make Vandermonde matrix using NTT
   V     = ones(N);
   M = zeros(1, p-1);
   for l = 0:p-2;

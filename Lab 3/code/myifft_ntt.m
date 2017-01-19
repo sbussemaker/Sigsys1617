@@ -3,6 +3,7 @@ function y = myifft_ntt(a, w, p)
   %         primitive nth root of unity w, where n is a power of 2
   % Output: A vector y of values of the polynomial for a at the nth roots
   %         of unity
+  
   N = length(a);
   if nargin < 2
     [g, p] = rootsofunity(N);

@@ -3,6 +3,7 @@ function y = myifft(a, w)
   %         of unity and a primitive nth root of unity w, where n is a 
   %         power of 2
   % Output: An n-length coefficient vector a = [a0, a1, ..., a(n-1)]
+  
   N = length(a);
   if nargin < 2
     w = exp(1j*2*pi/length(a));
