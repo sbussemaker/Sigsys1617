@@ -1,12 +1,19 @@
-function result = myconv_ntt(x, y)
-  assert(length(x) == length(y));
-  N = length(x);
+function c = myconv_ntt(a, b)
+  assert(length(a) == length(b));
+  N = length(a);
   
   % Zeropadding
-  x = [x zeros(1, N)];
-  y = [y zeros(1, N)];
+  a = [a zeros(1, N)];
+  b = [b zeros(1, N)];
 
-  % DFT
-  result = real(myifft_ntt(myfft_ntt(x).*myfft_ntt(y)));
-  result = result(1:end-1);
+  [root, prime] = rootsofunity(length(a));
+  k = (prime-1)/length(a);
+  omega = root^k;
+
+  x = myfft_ntt(a, omega, prime);
+  y = myfft_ntt(b, omega, prime);
+  z = x.*y;
+  
+  c = myifft_ntt(z, omega, prime);
+  c = c(1:end-1);
 end

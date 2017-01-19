@@ -1,10 +1,14 @@
-function y = myfft_ntt(a, w, prime)
+function y = myfft_ntt(a, w, p)
   % Input:  An n-length coefficient vector a = [a0, a1, ..., a(n-1)] and a
   %         primitive nth root of unity w, where n is a power of 2
   % Output: A vector y of values of the polynomial for a at the nth roots
   %         of unity
-  
   N = length(a);
+  if nargin < 2
+    [g, p] = rootsofunity(N);
+    k = (p-1)/N;
+    w = g^k;
+  end
   
   % Base case
   if N == 1
@@ -19,14 +23,14 @@ function y = myfft_ntt(a, w, prime)
   
   % Recursive Calls, with w^2 as (n/2)th root of unity, by the reduction
   % property
-  y_even = myfft_ntt(a_even, mod(power(w,2), prime), prime);
-  y_odd  = myfft_ntt(a_odd, mod(power(w,2), prime), prime);
+  y_even = myfft_ntt(a_even, rem(power(w,2), p), p);
+  y_odd  = myfft_ntt(a_odd, rem(power(w,2), p), p);
   
   y = zeros(1, N);
   % Combine Step, using x = w^i
   for i = 1:N/2
-    y(i)     = mod(y_even(i) + mod(x * y_odd(i), prime), prime);
-    y(i+N/2) = rem(y_even(i) - mod(x * y_odd(i), prime) + prime, prime);
-    x = mod(x*w, prime);
+    y(i)     = rem(y_even(i) + rem(x * y_odd(i), p), p);
+    y(i+N/2) = rem(y_even(i) - rem(x * y_odd(i), p) + p, p);
+    x = rem(x*w, p);
   end  
 end

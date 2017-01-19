@@ -3,108 +3,84 @@
 %
 % Lab 3: Signals and Systems
 
+% Test cases
+a0 = [2 5 2  0  0 1  3 7];        % Signal 0 of length 2^3, given by TAs
+r0 = [3 5 1 12 11 7 10 1];        % NTT coefficients of a0, for testing
+f0 = fft(a0);                     % FFT coefficients of a0, for testing
+
+a1 = [6 9  0 14  8 1 11 13 12  2 12 13 0 12 12 11];
+r1 = [0 7 13  1 14 9 14  6  3 11 10 13 2  8  3 16];
+f1 = fft(a1);
+
+b0 = randi([0 10],1,length(a0));  % Random signal, same length as a0
+b1 = randi([0 10],1,length(a1));  % Random signal, same length as a1
+
+tol = eps(1e10); % Tolerance for equality testing of floats, from:
+                 % https://mathworks.com/help/matlab/ref/eq.html#bt2klek-3
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Make a function myconv(x,y) that returns the convolution of the signals 
 % x and y
 
-% k = 3;
-% N = power(2, k);
-tol = eps(1e10); % Tolerance for equality testing
+c1 = conv(a0, b0);    c2 = myconv(a0, b0);
+c3 = conv(a1, b1);    c4 = myconv(a1, b1);
 
-% Two signals of length 2^k
-x0 = [2 5 2 0 0 1 3 7];
-y0 = randi([0 10],1,length(x0));
-
-r0 = [3 5 1 12 11 7 10 1];
-x1 = [6 9  0 14  8 1 11 13 12  2 12 13 0 12 12 11];
-r1 = [0 7 13  1 14 9 14  6  3 11 10 13 2  8  3 16];
-
-% Convolution
-z1 = conv(x0, y0);
-z2 = myconv(x0, y0);
-
-assert(sum(abs(z1-z2) < tol)==length(z1), ...
- 'Ex1: conv and myconv did not produce same output');
-
+assert(all(abs(c1-c2) < tol), 'Ex1: myconv fails for a0, b0');
+assert(all(abs(c3-c4) < tol), 'Ex1: myconv fails for a0, b0');
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Make a (very slow) DFT by constructing a vanderMonde matrix, and 
 % multiplying the input with this matrix. Compare your result with the 
 % built-in function FFT. Make also the inverse IFT
 
-[a0, V] = mydft(x0); z0 = myift(a0, V);
-a2 = fft(x0);
+y0 = mydft(a0);       c0 = myift(y0);
+y1 = mydft(a1);       c1 = myift(y1);
 
-assert(sum(abs(a0-a2) < tol)==length(a0), ...
- 'Ex2: mydft and fft did not produce same output');
-assert(sum(abs(z0-x0) < tol)==length(z0), ...
- 'Ex2: mydft+myift did not produce original signal');
-
+assert(all(abs(y0-f0) < tol), 'Ex2: mydft fails for a0');
+assert(all(abs(c0-a0) < tol), 'Ex2: mydft+myift fail for a0');
+assert(all(abs(y1-f1) < tol), 'Ex2: mydft fails for a1');
+assert(all(abs(c1-a1) < tol), 'Ex2: mydft+myift fail for a1');
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Repeat the previous exercise using prime numbers and roots of unity.
 
-[a0, V, V_inv] = mydft_ntt(x0);
-z0 = myift_ntt(a0, V_inv);
+y0 = mydft_ntt(a0);   c0 = myift_ntt(y0);
+y1 = mydft_ntt(a1);   c1 = myift_ntt(y1);
 
-[a1, V, V_inv] = mydft_ntt(x1);
-z1 = myift_ntt(a1, V_inv);
-
-assert(isequal(a0, r0), ...
- 'Voorbeeld 1 van TAs gaat niet goed');
-assert(isequal(a1, r1), ...
- 'Voorbeeld 2 van TAs gaat niet goed');
-assert(sum(abs(z0-x0) < tol)==length(x0), ...
- 'Ex3: myfft_ntt+myifft_ntt did not produce original signal x0');
-assert(sum(abs(z1-x1) < tol)==length(x1), ...
- 'Ex3: myfft_ntt+myifft_ntt did not produce original signal x1');
-
+assert(isequal(y0, r0), 'Ex3: mydft_ntt fails for a0');
+assert(isequal(c0, a0), 'Ex3: myfft_ntt+myifft_ntt fail for a0');
+assert(isequal(y1, r1), 'Ex3: mydft_ntt fails for a1');
+assert(isequal(c1, a1), 'Ex3: myfft_ntt+myifft_ntt fail for a1');
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
-% Implement the FFT and IFFT yourself (use a recursive impementation: see 
+% Implement the FFT and IFFT yourself (use a recursive impementation: see
 % slide 36 of lecture 5). Compare with the built-in FFT.
 
-w = exp(-1j*2*pi/length(x0));
-a0 = myfft(x0, w);  z0 = myifft(a2, w);
-a2 = fft(x0);       z2 = ifft(a2); 
+y0 = myfft(a0);       c0 = myifft(y0);
+y1 = myfft(a1);       c1 = myifft(y1);
 
-
-assert(sum(abs(a0-a2) < tol)==length(a0), ...
- 'Ex4: myfft and fft did not produce same output');
-assert(sum(abs(z0-z2) < tol)==length(z2), ...
- 'Ex4: myfft and myifft did not produce same output');
-
+assert(all(abs(y0-f0) < tol), 'Ex4: myfft fails for a0');
+assert(all(abs(c0-a0) < tol), 'Ex4: myfft+myifft fail for a0');
+assert(all(abs(y1-f1) < tol), 'Ex4: myfft fails for a1');
+assert(all(abs(c1-a1) < tol), 'Ex4: myfft+myifft fail for a1');
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Modify the code of the previous exercise to implement the NTT and its 
 % inverse.
 
-[root, prime] = rootsofunity(length(x0));
-k = (prime-1)/length(x0);
-omega = root^k;
-a0 = myfft_ntt(x0, omega, prime); z0 = myifft_ntt(a0, omega, prime);
+y0 = myfft_ntt(a0);   c0 = myifft_ntt(y0);
+y1 = myfft_ntt(a1);   c1 = myifft_ntt(y1);
 
-[root, prime] = rootsofunity(length(x1));
-k = (prime-1)/length(x1);
-omega = root^k;
-a1 = myfft_ntt(x1, omega, prime); z1 = myifft_ntt(a1, omega, prime);
-
-assert(isequal(a0, r0), ...
- 'Voorbeeld 1 van TAs gaat niet goed');
-assert(isequal(a1, r1), ...
- 'Voorbeeld 2 van TAs gaat niet goed');
-assert(sum(abs(z0-x0) < tol)==length(z1), ...
- 'Ex5: myfft_ntt+myifft_ntt did not produce original signal x0');
-assert(sum(abs(z1-x1) < tol)==length(z1), ...
- 'Ex5: myfft_ntt+myifft_ntt did not produce original signal x1');
-
+assert(isequal(y0, r0), 'Ex5: myfft_ntt fails for a0');
+assert(isequal(c0, a0), 'Ex5: myfft_ntt+myifft_ntt fail for a0');
+assert(isequal(y1, r1), 'Ex5: myfft_ntt fails for a1');
+assert(isequal(c1, a1), 'Ex5: myfft_ntt+myifft_ntt fail for a1');
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 % Repeat the first exercise (myconv), but now using NTTs.
 
-% TODO
-z1 = conv(x0, y0);
-z2 = myconv_ntt(x0, y0);
+c1 = conv(a0, b0);    c2 = myconv_ntt(a0, b0);  % Answer still in mod p!
+c3 = conv(a1, b1);    c4 = myconv_ntt(a1, b1);  % Answer still in mod p!
 
-assert(sum(abs(z1-z2) < tol)==length(z1), ...
- 'Ex6: conv and myconv_ntt did not produce same output');
+assert(all(abs(c1-c2) < tol), 'Ex6: myconv_ntt fails for a0, b0');
+assert(all(abs(c3-c4) < tol), 'Ex6: myconv_ntt fails for a1, b1');

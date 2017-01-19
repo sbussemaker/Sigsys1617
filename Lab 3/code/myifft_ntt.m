@@ -1,20 +1,39 @@
-function a = myifft_ntt(y, w, p)
-  % Input:  A vector y of values of the polynomial for a at the nth roots
-  %         of unity and a primitive nth root of unity w, where n is a 
-  %         power of 2
-  % Output: An n-length coefficient vector a = [a0, a1, ..., a(n-1)]
-  
-  N = length(y);
-  
-  a = zeros(1, N);
-  for k = 0:N-1
-    y2 = 0;
-    for n = 0:N-1
-%       y2(n+1) = rem(y(n+1)*rem(w.^rem(-n*k, p), p) ,p);
-%       y2 = y2 + rem(y(n+1)*mod(mod(w.^modinverse(N, p)*k, p).^n, p), p);
-      thing = power(w, -n*k)
-      y2 = y2 + mod(y(n+1)* thing, p);
-    end
-    a(k+1) = rem(modinverse(N, p)*y2, p);
+function y = myifft_ntt(a, w, p)
+  % Input:  An n-length coefficient vector a = [a0, a1, ..., a(n-1)] and a
+  %         primitive nth root of unity w, where n is a power of 2
+  % Output: A vector y of values of the polynomial for a at the nth roots
+  %         of unity
+  N = length(a);
+  if nargin < 2
+    [g, p] = rootsofunity(N);
+    k = (p-1)/N;
+    w = g^k;
   end
+  
+  % Base case
+  if N == 1
+    y = a;
+    return 
+  end
+  
+  % Divide Step, which seperates even and odd indices
+  x = power(w, 0);
+  a_even = a(1:2:end);
+  a_odd  = a(2:2:end);
+  
+  % Recursive Calls, with w^2 as (n/2)th root of unity, by the reduction
+  % property
+  y_even = myfft_ntt(a_even, rem(power(w,2), p), p);
+  y_odd  = myfft_ntt(a_odd, rem(power(w,2), p), p);
+  
+  y = zeros(1, N);
+  % Combine Step, using x = w^i
+  for i = 1:N/2
+    y(i)     = rem(y_even(i) + rem(x * y_odd(i), p), p);
+    y(i+N/2) = rem(y_even(i) - rem(x * y_odd(i), p) + p, p);
+    x = rem(x*w, p);
+  end
+  
+  y = rem(real(modinverse(N, p) * y), p);
+  y(2:end) = y(end:-1:2);
 end

@@ -1,12 +1,11 @@
-function result = myconv(x, y)
-  assert(length(x) == length(y));
-  N = length(x);
+function c = myconv(a, b)
+  N = length(a);
   
   % Zeropadding
-  x = [x zeros(1, N)];
-  y = [y zeros(1, N)];
+  a = [a zeros(1, N)];
+  b = [b zeros(1, N)];
 
-  % DFT
-  result = real(ifft(fft(x).*fft(y)));
-  result = result(1:end-1);
+  % Convolve
+  c = real(ifft(fft(a).*fft(b)));
+  c = c(1:end-1);
 end
