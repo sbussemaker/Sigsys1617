@@ -4,14 +4,14 @@ function a = slowIFT(y)
   %         power of 2
   % Output: An n-length coefficient vector a = [a0, a1, ..., a(n-1)]
   N = length(y);
-  w = exp(1j*2*pi/N); % Omega, without minus in exponent
+  w = exp(1j*2*pi/N);                   % Omega, without minus in exponent
   
-  V_inv = zeros(N);
+  V_inv = zeros(N);                     % Make VanderMonde matrix
   for k = 0:N-1
       for n = 0:N-1
           V_inv(k+1, n+1) = (w.^k).^n;  % F[i,j] = w^-nk
       end
   end
   
-  a = (1/N)*y*V_inv; % Multiply and divide by N
+  a = (1/N) * y * V_inv;                % a = 1/N * a F-1
 end

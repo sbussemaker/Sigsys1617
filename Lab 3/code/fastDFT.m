@@ -3,16 +3,13 @@ function y = fastDFT(a, w)
   %         primitive nth root of unity w, where n is a power of 2
   % Output: A vector y of values of the polynomial for a at the nth roots
   %         of unity
-  
   N = length(a);
-  if nargin < 2
-    w = exp(-1j*2*pi/length(a));
-  end
+  if nargin < 2                     % set w first time function is called
+    w = exp(-1j*2*pi/length(a));    % act as some kind of 'wrapper'
+  end                               % is ignored within recursion
 
-  % Base case
-  if N == 1
-    y = a;
-    return 
+  if N == 1                          % Base case
+    y = a; return 
   end
   
   % Divide Step, which seperates even and odd indices
@@ -25,8 +22,8 @@ function y = fastDFT(a, w)
   y_even = fastDFT(a_even, power(w,2));
   y_odd  = fastDFT(a_odd, power(w,2));
   
-  y = zeros(1, N);
   % Combine Step, using x = w^i
+  y = zeros(1, N);
   for i = 1:N/2
     y(i)     = y_even(i) + x * y_odd(i);
     y(i+N/2) = y_even(i) - x * y_odd(i);    

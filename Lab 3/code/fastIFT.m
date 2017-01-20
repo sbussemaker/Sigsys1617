@@ -3,16 +3,13 @@ function a = fastIFT(y, w)
   %         of unity and a primitive nth root of unity w, where n is a 
   %         power of 2
   % Output: An n-length coefficient vector a = [a0, a1, ..., a(n-1)]
-  
   N = length(y);
-  if nargin < 2
-    w = exp(1j*2*pi/length(y));
-  end
+  if nargin < 2                     % set w first time function is called
+    w = exp(1j*2*pi/length(y));     % act as some kind of 'wrapper'
+  end                               % is ignored within recursion
   
-  % Base case
-  if N == 1
-    a = y;
-    return 
+  if N == 1                          % Base case
+    a = y; return 
   end
   
   % Divide Step, which seperates even and odd indices
@@ -25,17 +22,15 @@ function a = fastIFT(y, w)
   y_even = fastIFT(a_even, power(w,2));
   y_odd  = fastIFT(a_odd, power(w,2));
   
-  a = zeros(1, N);
   % Combine Step, using x = w^i
+  a = zeros(1, N);
   for i = 1:N/2
     a(i)     = y_even(i) + x * y_odd(i);
     a(i+N/2) = y_even(i) - x * y_odd(i);    
     x = x*w;
   end
-  
-  % mooie comment
-  if nargin < 2
-    a = real((1/N)*a);
+
+  if nargin < 2           % Perform 1/N at the end, not within the
+    a = real((1/N)*a);    % recursion
   end
 end
-

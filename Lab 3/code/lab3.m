@@ -84,4 +84,3 @@ c3 = conv(a1, b1);    c4 = myconv_ntt(a1, b1);  % Answer still in mod p!
 
 assert(all(abs(c1-c2) < tol), 'Ex6: myconv_ntt fails for a0, b0');
 assert(all(abs(c3-c4) < tol), 'Ex6: myconv_ntt fails for a1, b1');
-
