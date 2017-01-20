@@ -1,4 +1,4 @@
-function y = myifft_ntt(a, w, p)
+function y = fastDFT(a, w)
   % Input:  An n-length coefficient vector a = [a0, a1, ..., a(n-1)] and a
   %         primitive nth root of unity w, where n is a power of 2
   % Output: A vector y of values of the polynomial for a at the nth roots
@@ -6,11 +6,9 @@ function y = myifft_ntt(a, w, p)
   
   N = length(a);
   if nargin < 2
-    [g, p] = rootsofunity(N);
-    k = (p-1)/N;
-    w = g^k;
+    w = exp(-1j*2*pi/length(a));
   end
-  
+
   % Base case
   if N == 1
     y = a;
@@ -24,17 +22,14 @@ function y = myifft_ntt(a, w, p)
   
   % Recursive Calls, with w^2 as (n/2)th root of unity, by the reduction
   % property
-  y_even = myfft_ntt(a_even, rem(power(w,2), p), p);
-  y_odd  = myfft_ntt(a_odd, rem(power(w,2), p), p);
+  y_even = fastDFT(a_even, power(w,2));
+  y_odd  = fastDFT(a_odd, power(w,2));
   
   y = zeros(1, N);
   % Combine Step, using x = w^i
   for i = 1:N/2
-    y(i)     = rem(y_even(i) + rem(x * y_odd(i), p), p);
-    y(i+N/2) = rem(y_even(i) - rem(x * y_odd(i), p) + p, p);
-    x = rem(x*w, p);
-  end
-  
-  y = rem(real(modinverse(N, p) * y), p);
-  y(2:end) = y(end:-1:2);
+    y(i)     = y_even(i) + x * y_odd(i);
+    y(i+N/2) = y_even(i) - x * y_odd(i);    
+    x = x*w;
+  end  
 end

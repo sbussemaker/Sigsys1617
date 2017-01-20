@@ -1,19 +1,18 @@
 function c = myconv_ntt(a, b)
-  assert(length(a) == length(b));
   N = length(a);
   
   % Zeropadding
   a = [a zeros(1, N)];
   b = [b zeros(1, N)];
 
-  [root, prime] = rootsofunity(length(a));
-  k = (prime-1)/length(a);
-  omega = root^k;
+  [g, p] = rootsofunity(length(a));
+  k = (p-1)/length(a);
+  w = g^k;
 
-  x = myfft_ntt(a, omega, prime);
-  y = myfft_ntt(b, omega, prime);
+  x = fastNTT(a, w, p);
+  y = fastNTT(b, w, p);
   z = x.*y;
   
-  c = myifft_ntt(z, omega, prime);
+  c = fastINTT(z, w, p);
   c = c(1:end-1);
 end
